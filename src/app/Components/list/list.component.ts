@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 const fieldValue = firebase.firestore.FieldValue
+import {DashBoardService} from "../../service/dash-board.service"
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -13,7 +14,7 @@ export class ListComponent implements OnInit {
   @Input() tabUUID:string;
   items: string[] = [];
 
-  constructor(public afs:AngularFirestore) { }
+  constructor(public afs:AngularFirestore, public dashboardservice: DashBoardService) { }
 
   ngOnInit(): void {
     console.log(this.tabUUID)
@@ -23,11 +24,7 @@ export class ListComponent implements OnInit {
     })
   }
 
-  async updateTabCard(){
-    return await this.afs.collection("cards").doc(this.tabUUID).set({
-      "messages":this.items
-    })
-  }
+  
 
   moveCard(event:CdkDragExit<string[]>){
     // event.item.exited.subscribe((data)=>{
@@ -45,7 +42,7 @@ export class ListComponent implements OnInit {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-      await this.updateTabCard();
+      await this.dashboardservice.updateTabCard(event.container.id, event.container.data);
     } else {
       console.log("MOVE")
       transferArrayItem(
@@ -53,8 +50,9 @@ export class ListComponent implements OnInit {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-        await this.updateTabCard();
-        console.log(this.tabUUID)
+        await this.dashboardservice.updateTabCard(event.previousContainer.id, event.previousContainer.data);
+        await this.dashboardservice.updateTabCard(event.container.id, event.container.data);
+        //console.log(this.tabUUID)
         console.log(event.previousContainer.id)
         // uuid card
         // data []

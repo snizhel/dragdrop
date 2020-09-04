@@ -5,7 +5,7 @@
   <input name="newItem" ngModel type="text" placeholder="Enter a new item"><button type="submit">Add Item</button>
 </form> -->
 <div class="container">
-  <div class="list" cdkDropList [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"  (cdkDropListExited)="moveCard($event)">
+  <div class="list" cdkDropList [id]="this.tabUUID"  [cdkDropListData]="items" (cdkDropListDropped)="drop($event)"  (cdkDropListExited)="moveCard($event)">
       <mat-card class="list-item" *ngFor="let item of items" cdkDrag>
           <mat-card-content>
               <p>{{item}}</p>
